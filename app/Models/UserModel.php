@@ -2,10 +2,18 @@
 
 namespace App\Models;
 
+use App\Libraries\DatabaseConnector;
 use CodeIgniter\Model;
+use Exception;
 
 class UserModel extends Model
-{
+{ private $database;
+    function __construct()
+    {
+        $connection = new DatabaseConnector();
+        $this->database = $connection->getDatabase();
+        
+    }
     protected $table            = 'user';
     protected $primaryKey       = 'user_id';
     protected $useAutoIncrement = true;
@@ -48,35 +56,88 @@ class UserModel extends Model
         return $this->update($userId, $userData);
     }
 
-    public function getAllUser($condition = "")
+    // public function getAllUser($condition = "")
+    // {
+    //     if (!empty($condition)) {
+    //         $db      = \Config\Database::connect();
+    //         $builder = $db->table('role');
+    //         $builder->select('*');
+    //         $builder->join('user', 'user.user_role = role.role_id');
+    //         $query =  $builder->get();
+    //         return $query->getResultArray();
+    //     } else {
+    //         return $this->find();
+    //     }
+    // }
+    public function getAllUser()
     {
-        if (!empty($condition)) {
-            $db      = \Config\Database::connect();
-            $builder = $db->table('role');
-            $builder->select('*');
-            $builder->join('user', 'user.user_role = role.role_id');
-            $query =  $builder->get();
-            return $query->getResultArray();
-        } else {
-            return $this->find();
-        }
+
+        $aggregatePipeline = [
+            [
+                '$lookup' => [
+                    'from' => 'role',
+                    'localField' => 'user_role',
+                    'foreignField' => 'role_id',
+                    'as' => 'users',
+                ],
+            ],
+        
+        ];
+
+    return $this->database->users->aggregate($aggregatePipeline);
+
+
     }
-    public function getUser($condition = "")
+    public function getUser($condition)
     {
-        if (!empty($condition)) {
-            $db      = \Config\Database::connect();
-            $builder = $db->table('role');
-            $builder->select('*');
-            $builder->join('user', 'user.user_role = role.role_id');
-            $builder->where($condition);
-            $query =  $builder->get();
-            return $query->getRow();
-        } else {
-            return $this->find();
-        }
+        
+        $pipeline = [
+            [
+                '$lookup' => [
+                    'from' => 'role',
+                    'localField' => 'user_role',
+                    'foreignField' => 'role_id',
+                    'as' => 'usersData',
+                ],
+            ],
+            [
+                '$unwind' => '$usersData',
+            ],
+            [
+                '$match' => [
+                    'user_id' => $condition, // Replace with the actual product name
+                ],
+            ],
+        ];
+
+        return $this->database->users->aggregate($pipeline);
+           
     }
     public function checkValidUser($condition = "")
     {
         return $this->where($condition)->first();
+    }
+
+    public function insertUserData($data)
+    {
+       
+        $insertOneResult = $this->database->users->insertOne($data);
+        if (empty($insertOneResult)) 
+            throw new Exception('Invalid Menu Data');
+
+        return $insertOneResult->getInsertedId();
+    }
+
+    public function updateUserData($data,$condition)
+    {
+       
+        $updateResult = $this->database->users->updateOne(
+            $condition,
+            ['$set'=>$data]
+        );
+        if (empty($updateResult->getMatchedCount())) 
+            throw new Exception('Invalid Menu Data');
+
+        return $updateResult->getMatchedCount();
     }
 }

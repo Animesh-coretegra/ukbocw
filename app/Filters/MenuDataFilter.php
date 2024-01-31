@@ -27,31 +27,43 @@ class MenuDataFilter implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
+        $mainMenu = [];
         $session = session();
+        $user = $session->get('access-token');
+        if (empty($user)) {
+            return redirect()->to('/');
+        }
         $role = $session->get('role');
+        
         $menuModel = new MenuModel();
-        $menu = $menuModel->getNavigation(array('role_id' => $role));
-
-        if (!empty($menu)) {
-            foreach ($menu as $key => $value) {
-                $parent =  $menuModel->getMenu(array('menu_id' => $value['menu_id']));
-                $menu[$key]['menu'] = $parent;
+        $menu = $menuModel->getNavigation(array('role_id' => $role,'status' => '1'));
+        foreach ($menu as $key => $menuValue) {
+       $mainMenu[] = iterator_to_array($menuValue);
+        }
+        if (!empty($mainMenu)) {
+            foreach ($mainMenu as $key => $value) {
+                $parentCursor =  $menuModel->getMenu(array('menu_id' => $value['menu_id']));
+                $parentArray = iterator_to_array($parentCursor);
+                $mainMenu[$key]['parentMenu'] = $parentArray;
             }
         }
-        $menuData =  [];
-        foreach ($menu as $key => $value) {
-            if ($value['menu']['parent_id'] == '0')
+        
+         $menuData =  [];
+        foreach ($mainMenu as $key => $value) {
+            if ($value['parentMenu']['parent_id'] == '0')
                 $menuData[$key] = $value;
         }
         $i = 0;
+        if(!empty($menuData)){
         foreach ($menuData as $p_key => $menuValue) {
-            foreach ($menu as $key => $value) {
-                if ($value['menu']['parent_id'] == $menuValue['menu_id'])
-                    $menuData[$p_key]['child_menu'][$i++] = $value['menu'];
+            foreach ($mainMenu as $key => $value) {
+                if ($value['parentMenu']['parent_id'] == $menuValue['menu_id'])
+                    $menuData[$p_key]['child_menu'][$i++] = $value['parentMenu'];
             }
             $i = 0;
         }
-
+    }
+        //echo "<pre>";print_r($menuData);die;
         $request->menuData = $menuData;
         return $request;
     }

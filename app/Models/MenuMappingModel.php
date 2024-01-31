@@ -2,10 +2,19 @@
 
 namespace App\Models;
 
+use App\Libraries\DatabaseConnector;
 use CodeIgniter\Model;
+use Exception;
 
 class MenuMappingModel extends Model
 {
+    private $database;
+    function __construct()
+    {
+        $connection = new DatabaseConnector();
+        $this->database = $connection->getDatabase();
+        
+    }
     protected $table            = 'menu_mapping';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
@@ -40,24 +49,28 @@ class MenuMappingModel extends Model
 
     public function insertMenuMapping($menuData)
     {
-        return $this->insert($menuData);
+        $insertOneResult = $this->database->menu_mapping->insertOne($menuData);
+        if (empty($insertOneResult)) 
+            throw new Exception('Invalid Menu Data');
+
+        return $insertOneResult->getInsertedId();
     }
 
     public function getAllMenu($condition = "")
     {
-        if (!empty($condition)) {
-            return $this->where($condition)->find();
-        } else {
-            return $this->find();
-        }
+        $role = $this->database->menu_mapping->findOne($condition);
+        return $role;
     }
 
-    public function updateRole($roleData, $roleId, $menuId)
+    public function updateRole($condition,$data)
     {
-        $db      = \Config\Database::connect();
-        $builder = $db->table('menu_mapping');
-        $builder->where(['role_id' => $roleId, 'menu_id' => $menuId]);
-        $update = $builder->update($roleData);
-        return $update;
+        $updateResult = $this->database->menu_mapping->updateOne(
+            $condition,
+            ['$set'=>$data]
+        );
+        if (empty($updateResult->getMatchedCount())) 
+            throw new Exception('Invalid Menu Data');
+
+        return $updateResult->getMatchedCount();
     }
 }

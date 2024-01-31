@@ -184,7 +184,7 @@ echo  $this->section('body-content'); ?>
       <h4 class="mb-sm-0">Role Setup</h4>
       <div class="page-title-right d-flex justify-content-around">
         <ol class="breadcrumb m-0 p-2">
-          <li class="breadcrumb-item"><a href="javascript: void(0);">Guzaarish</a></li>
+          <li class="breadcrumb-item"><a href="javascript: void(0);">UKBOCWWB</a></li>
           <li class="breadcrumb-item active"><a href="<?= base_url('role') ?>">Role</a></li>
         </ol>&nbsp;&nbsp;
         <button type="button" id="" class="btn btn-info waves-effect waves-light createMenuModal">
@@ -334,12 +334,9 @@ echo  $this->section('body-content'); ?>
         dataType: 'json',
         success: function(response) {
           console.log(response);
-          var roleId = "";
-          response.role.map((role) => {
-            $("#roleNameEdit").val(role.role_name);
-            $("#role_id").val(role.role_id);
-            roleId = role.role_id;
-          })
+          $("#roleNameEdit").val(response.role.role_name);
+            $("#role_id").val(response.role.role_id);
+            var roleId = response.role.role_id;
           if (response != "") {
             var i = 1;
             var userAccess = `<div class="row">`;

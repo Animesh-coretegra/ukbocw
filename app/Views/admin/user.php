@@ -334,7 +334,7 @@ echo  $this->section('body-content'); ?>
                     <?php
 
                     $password = array(
-                      'type' => 'text',
+                      'type' => 'password',
                       'class' => 'form-control',
                       'name' => 'password',
                       'id' => 'user-password',
@@ -423,7 +423,7 @@ echo  $this->section('body-content'); ?>
       <h4 class="mb-sm-0">User Setup</h4>
       <div class="page-title-right d-flex justify-content-around">
         <ol class="breadcrumb m-0 p-2">
-          <li class="breadcrumb-item"><a href="javascript: void(0);">Guzaarish</a></li>
+          <li class="breadcrumb-item"><a href="javascript: void(0);">UKBOCWWB</a></li>
           <li class="breadcrumb-item active"><a href="<?= base_url('user') ?>">User</a></li>
         </ol>&nbsp;&nbsp;
         <button type="button" id="" class="btn btn-info waves-effect waves-light createMenuModal">
@@ -457,7 +457,6 @@ echo  $this->section('body-content'); ?>
           <thead>
             <tr>
               <th>Sl No</th>
-              <th>User Id</th>
               <th>Name</th>
               <th>Email</th>
               <th>Phone Number</th>
@@ -474,11 +473,10 @@ echo  $this->section('body-content'); ?>
               foreach ($userData as $key => $value) { ?>
                 <tr>
                   <td><?= $slNo++ ?></td>
-                  <td><?= !empty($value['user_id']) ? $value['user_id'] : "" ?></td>
                   <td><?= !empty($value['user_name']) ? $value['user_name'] : "" ?></td>
                   <td><?= !empty($value['user_email']) ? $value['user_email'] : "" ?></td>
                   <td><?= !empty($value['user_phone']) ? $value['user_phone'] : "" ?></td>
-                  <td><?= !empty($value['role_name']) ? $value['role_name'] : "" ?></td>
+                  <td><?=  !empty($value['users'][0]['role_name'] ) ? $value['users'][0]['role_name']  : ""?></td>
                   <td><?= !empty($value['status']) && $value['status'] == 1  ? '<span class="badge badge-soft-success"><strong>Active</strong></span>' : '<span class="badge badge-soft-danger"><strong>Deactive</strong></span>' ?></td>
                   <td class="text-right">
                     <div class="dropdown d-inline-block">
@@ -536,7 +534,7 @@ echo  $this->section('body-content'); ?>
     $('.user_edit').click(function() {
       var userId = $(this).attr('userId');
       $.ajax({
-        url: "<?php echo base_url('user-access-edit'); ?>",
+        url: "<?php echo base_url('user-edit'); ?>",
         data: {
           'user_id': userId
         },

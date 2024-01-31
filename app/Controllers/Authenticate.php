@@ -3,100 +3,104 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\GeneralModel;
-use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
+use App\Models\AuthModel;
+use GuzzleHttp\Client;
+use Exception;
 
 class Authenticate extends BaseController
 {
-    private $generalModel;
-
-    public function initController(
-        RequestInterface $request,
-        ResponseInterface $response,
-        LoggerInterface $logger
-    ) {
-        parent::initController($request, $response, $logger);
-        $this->generalModel = new GeneralModel();
-    }
     public function auth()
     {
-        helper(['cookie', 'util']);
-        if ($this->request->getMethod() == 'post') {
+        helper('jwt');
+        try {
+            $header = [
+                'uri' => $this->request->getPath(),
+            ];
             $request = $this->request->getPost();
-            $recaptcha = new \ReCaptcha\ReCaptcha(getenv('RECAPTCHA_SECRET_V3_KEY'));
-            $resp = $recaptcha->setExpectedHostname($_SERVER['SERVER_NAME'])
-                ->verify($request['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
-            if ($resp->isSuccess()) {
-                $validation = \Config\Services::validation();
-                $validation->setRules([
-                    'password' => [
-                        'label'  => 'Password',
-                        'rules'  => 'required|max_length[16]|min_length[8]|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/]',
-                        'errors' => [
-                            'required' => 'All accounts must have {field} provided',
-                            'min_length' => 'Your {field} is too short. You want to get hacked?',
-                            'regex_match' => 'Password length must be 8 and at least 1 special symbol,1 lowercase and 1 uppercase'
-                        ],
-                    ],
-                    'username' => [
-                        'label'  => 'Email Id',
-                        'rules'  => 'required|valid_email',
-                        'errors' => [
-                            'required' => 'All accounts must have {field} provided',
-                            'valid_email' => 'Enter Valid Email Id',
-                        ],
-                    ],
-                ]);
+           
+                $client = new Client(['verify' => 'D:\wamp64\bin\php\php8.2.0\extras\ssl\cacert.pem']);
+                $header = array(
+                    'Accept'     => 'application/json',
+                    'x-api-key' => getenv('API_KEY'),
+                );
 
-                if (!$validation->withRequest($this->request)->run()) {
-                    return redirect()->to('sign-in')->withInput()->with('validationError', $validation->getErrors());
+                $data = $client->request('post', base_url('api/v1/auth'), ['body' => json_encode($request), 'headers' => $header]);
+                if ($data->getStatusCode()) {
+                    $session = \Config\Services::session($config = null);
+                    $response = json_decode($data->getBody()->read(2048), true);
+                    $session->set('access-token', $response['access-token']);
+                    $session->set('role', $response['user']['user_role']);
+                    $session->set('username', $response['user']['user_name']);
+                    $session->set('userId', $response['user']['user_id']);
+                    return redirect()->to("dashboard");
                 } else {
-                    $condition = array(
-                        'user_email' => $request['username'],
-                        'user_password' => base64_encode($request['password']),
-                        'status' => '1'
-                    );
-                    $user = $this->generalModel->fetch_single_data('user', $condition);
-                    if (!empty($user)) {
-                        if (isset($request['rememberMe'])) {
-                            $userValue = array(
-                                'username' => $request['username'],
-                                'password' => $request['password']
-                            );
-                            setcookie("userData", encryptData($userValue));
-                        }
-                        $session = session();
-                        $userSession = [
-                            'userId'  => $user['user_id'],
-                            'username'  => $user['user_name'],
-                            'profile'  => $user['user_profile_image'],
-                        ];
-                        $session->set('user', $userSession);
-                        $session->set('role', $user['user_role']);
-                        return redirect()->to('/dashboard');
-                    } else {
-                        return redirect()->to('/sign-in')->withInput()->with('failed', 'Invalid username & Password');
-                    }
-                }
+                throw new Exception('Invalid Username and Password.');
+            }
+        } catch (Exception $e) {
+            if ($e->getCode() == 400) {
+                return redirect()->back()->withInput()->with('error', $e->getMessage());
+            } else {
+                return redirect()->back()->withInput()->with('error', $e->getMessage());
             }
         }
-        return view('login');
     }
 
     public function forgotPassword()
     {
-        return view('forgotPassword');
+        $request = $this->request->getPost();
+        $rules = [
+            'username' => 'required|min_length[6]|max_length[50]|valid_email'
+        ];
+        $validation = \Config\Services::validation();
+        if (!$this->validateRequest($request, $rules)) {
+            return redirect()->to('/forget-password')->with('validation', $validation->getErrors());
+        } else {
+            try {
+                
+                    $header = array(
+                        'Accept'     => 'application/json',
+                        'x-api-key' => getenv('API_KEY'),
+                    );
+                    $authModel = new AuthModel();
+                    $user = json_decode($authModel->findUserByEmailAddress($request['username']), true);
+                    if (!empty($user)) {
+                        return redirect()->to('/reset-password')->withInput();
+                    }
+            } catch (Exception $e) {
+                return redirect()->back()->withInput()->with('error', $e->getMessage());
+            }
+        }
     }
-    public function recoverPassword()
-    {
-        return view('recoverPassword');
+
+    public function resetPassword(){
+        $request = $this->request->getPost();
+                $client = new Client(['verify' => 'D:\wamp64\bin\php\php8.2.0\extras\ssl\cacert.pem']);
+                $header = array(
+                    'Accept'     => 'application/json',
+                    'x-api-key' => getenv('API_KEY'),
+                );
+                $requestBody = array(
+                    'username'=>$request['username'],
+                    'password'=>$request['password'],
+                    'confirm_password'=>$request['confirm_password'],
+                );
+                try{
+                $data = $client->request('post', base_url('api/v1/reset-password'), ['body' => json_encode($requestBody), 'headers' => $header]);
+                $response = json_decode($data->getBody()->read(2048),true);
+                if(!empty($response)){
+                    return redirect()->to('/')->with('success','Password updated successfully');
+                }
+                }catch(Exception $e){
+                    if(in_array($e->getCode(),[400,500])){
+                        return redirect()->back()->withInput()->with('error', $e->getMessage());
+                    }
+                    return redirect()->back()->withInput()->with('error', $e->getMessage());
+                }
     }
-    public function logout()
-    {
+
+    public function logout(){
         $session = session();
         $session->destroy();
-        return redirect()->to('/sign-in')->withInput()->with('success', 'Logout Successful');
+    return redirect()->to('/');
     }
 }

@@ -4,7 +4,7 @@
 <head>
 
   <meta charset="utf-8" />
-  <title>Guzaarish</title>
+  <title>UKBOCWWB</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta content="" name="description" />
   <meta content="" name="author" />
@@ -24,7 +24,6 @@
 
   <!-- Responsive datatable examples -->
   <link href="<?= base_url(); ?>assets/backend/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-  <script src="https://www.google.com/recaptcha/api.js?render=<?= getenv('RECAPTCHA_SITE_V3_KEY') ?>"></script>
 </head>
 
 <body data-topbar="dark">
@@ -55,11 +54,11 @@
             <div class="col-sm-6">
               <script>
                 document.write(new Date().getFullYear())
-              </script> © Upcube.
+              </script> © UKBOCWWB.
             </div>
             <div class="col-sm-6">
               <div class="text-sm-end d-none d-sm-block">
-                Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesdesign
+                Design & Developed by <a href="https://coretegra.com/">Coretegra Technologies Private Limited</a>
               </div>
             </div>
           </div>

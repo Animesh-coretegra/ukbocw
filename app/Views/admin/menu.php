@@ -194,7 +194,7 @@ echo  $this->section('body-content'); ?>
       <h4 class="mb-sm-0">Menu Setup</h4>
       <div class="page-title-right d-flex justify-content-around">
         <ol class="breadcrumb m-0 p-2">
-          <li class="breadcrumb-item"><a href="javascript: void(0);">Guzaarish</a></li>
+          <li class="breadcrumb-item"><a href="javascript: void(0);">UKBOCWWB</a></li>
           <li class="breadcrumb-item active"><a href="<?= base_url('menu') ?>">Menu</a></li>
         </ol>&nbsp;&nbsp;
         <button type="button" id="" class="btn btn-info waves-effect waves-light createMenuModal">

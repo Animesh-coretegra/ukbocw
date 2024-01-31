@@ -2,10 +2,19 @@
 
 namespace App\Models;
 
+use App\Libraries\DatabaseConnector;
 use CodeIgniter\Model;
+use Exception;
 
 class MenuModel extends Model
 {
+    private $database;
+    function __construct()
+    {
+        $connection = new DatabaseConnector();
+        $this->database = $connection->getDatabase();
+        
+    }
 
     protected $table            = 'menu';
     protected $primaryKey       = 'menu_id';
@@ -39,48 +48,63 @@ class MenuModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function getAllMenu($condition = "")
-    {
-        if (!empty($condition)) {
-            return $this->where($condition)->find();
-        } else {
-            return $this->find();
-        }
-    }
-
-    public function getMenu($condition = "")
-    {
-        if (!empty($condition)) {
-            return $this->where($condition)->first();
-        } else {
-            return $this->find();
-        }
-    }
-
-    public function insertMenu($menuData)
-    {
-        return $this->insert($menuData);
-    }
-    public function updateMenu($menuData, $menuId)
-    {
-        return $this->update($menuId, $menuData);
-    }
-
-    public function getMenuIcon()
-    {
-        $db      = \Config\Database::connect();
-        $builder = $db->table('menu_icons');
-        $builder->select('*');
-        $query =  $builder->get();
-        return $query->getResultArray();
-    }
+  
+    
     public function getNavigation($condition)
     {
-        $db      = \Config\Database::connect();
-        $builder = $db->table('menu_mapping');
-        $builder->select('*');
-        $builder->where($condition);
-        $query =  $builder->get();
-        return $query->getResultArray();
+       
+        $menuMapping = $this->database->menu_mapping->find($condition);
+        if (!$menuMapping) 
+            throw new Exception('Invalid Menu Data');
+
+        return $menuMapping;
+    }
+    public function getMenu($condition)
+    {
+        $menu = $this->database->menu->findOne($condition);
+        // if (empty($menu)) {
+        //     throw new Exception('Invalid Menu Data');
+        // }
+
+        return $menu;
+    }
+    public function getAllMenu($condition)
+    {
+       
+        $menu = $this->database->menu->find($condition);
+        if (!$menu) 
+            throw new Exception('Invalid Menu Data');
+
+        return $menu;
+    }
+    public function getAllMenuIcon()
+    {
+       
+        $menu = $this->database->menu_icons->find();
+        if (!$menu) 
+            throw new Exception('Invalid Menu Data');
+
+        return $menu;
+    }
+    public function insertMenuData($data)
+    {
+       
+        $insertOneResult = $this->database->menu->insertOne($data);
+        if (empty($insertOneResult)) 
+            throw new Exception('Invalid Menu Data');
+
+        return $insertOneResult->getInsertedId();
+    }
+    public function updateMenuData($data,$condition)
+    {
+       
+        $updateResult = $this->database->menu->updateOne(
+            $condition,
+            ['$set'=>$data]
+        );
+        if (empty($updateResult->getMatchedCount())) 
+            throw new Exception('Invalid Menu Data');
+
+        return $updateResult->getMatchedCount();
     }
 }
