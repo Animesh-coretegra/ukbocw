@@ -17,7 +17,6 @@
   <link href="<?= base_url(); ?>assets/backend/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
   <!-- App Css-->
   <link href="<?= base_url(); ?>assets/backend/assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
-  <script src="https://www.google.com/recaptcha/api.js?render=<?= getenv('RECAPTCHA_SITE_V3_KEY') ?>"></script>
 
 </head>
 

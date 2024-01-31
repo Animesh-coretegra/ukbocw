@@ -2,10 +2,19 @@
 
 namespace App\Models;
 
+use App\Libraries\DatabaseConnector;
 use CodeIgniter\Model;
+use Exception;
 
 class RoleModel extends Model
 {
+    private $database;
+    function __construct()
+    {
+        $connection = new DatabaseConnector();
+        $this->database = $connection->getDatabase();
+        
+    }
     protected $table            = 'role';
     protected $primaryKey       = 'role_id';
     protected $useAutoIncrement = true;
@@ -38,21 +47,50 @@ class RoleModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function getRole($condition = "")
+    public function getRole()
     {
-        if (!empty($condition)) {
-            return $this->where($condition)->find();
-        } else {
-            return $this->find();
-        }
+        $role = $this->database->role->find();
+        if (!$role) 
+            throw new Exception('Invalid role Data');
+
+        return $role;
+    }
+    public function getSingleRole($condition)
+    {
+        $role = $this->database->role->findOne($condition);
+        if (!$role) 
+            throw new Exception('Invalid role Data');
+
+        return $role;
     }
 
-    public function insertRole($roleData)
+    public function insertRoleData($data)
     {
-        return $this->insert($roleData);
+       
+        $insertOneResult = $this->database->role->insertOne($data);
+        if (empty($insertOneResult)) 
+            throw new Exception('Invalid Menu Data');
+
+        return $insertOneResult->getInsertedId();
     }
-    public function updateRole($roleData, $roleId)
+    public function insertMenuMapping($data)
     {
-        return $this->update($roleId, $roleData);
+       
+        $insertOneResult = $this->database->menu_mapping->insertOne($data);
+        if (empty($insertOneResult)) 
+            throw new Exception('Invalid Menu Data');
+
+        return $insertOneResult->getInsertedId();
+    }
+    public function updateRole($data, $condition)
+    {
+        $updateResult = $this->database->role->updateOne(
+            $condition,
+            ['$set'=>$data]
+        );
+        if (empty($updateResult->getMatchedCount())) 
+            throw new Exception('Invalid Menu Data');
+
+        return $updateResult->getMatchedCount();
     }
 }

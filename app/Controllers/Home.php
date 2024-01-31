@@ -6,12 +6,11 @@ class Home extends BaseController
 {
     public function index()
     {
-        $session = session();
-        $user = $session->get('user');
-        if (empty($user)) {
-            return redirect()->to('sign-in');
-        }
+        return view('login');
+    }
+    public function dashboard()
+    {        
         $menuData = $this->request->menuData;
-        return view('dashboard', compact('menuData'));
+        return view('dashboard',compact('menuData'));
     }
 }

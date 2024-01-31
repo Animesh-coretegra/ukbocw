@@ -136,7 +136,7 @@
 
       <div class="dropdown d-inline-block user-dropdown">
         <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <img class="rounded-circle header-profile-user" src="<?= base_url(); ?>assets/backend/assets/images/users/<?= $profileImage ?>" alt="Header Avatar">
+          <img class="rounded-circle header-profile-user" src="<?= base_url(); ?>assets/backend/assets/images/users/multiuser.png" alt="Header Avatar">
           <span class="d-none d-xl-inline-block ms-1"><?= !empty($user['username']) ? $user['username'] : "" ?></span>
           <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
         </button>
@@ -165,11 +165,14 @@
     <!-- User details -->
     <div class="user-profile text-center mt-3">
       <div class="">
-        <img src="<?= base_url(); ?>assets/backend/assets/images/users/<?= $profileImage ?>" alt="" class="avatar-md rounded-circle">
+        <img src="<?= base_url(); ?>assets/backend/assets/images/users/multiuser.png" alt="" class="avatar-md rounded-circle">
       </div>
+      <?php 
+      $session = session();
+      $user = $session->get('username');
+      ?>
       <div class="mt-3">
-        <h4 class="font-size-16 mb-1"><?= !empty($user['username']) ? $user['username'] : "" ?></h4>
-        <span class="text-muted"><i class="ri-record-circle-line align-middle font-size-14 text-success"></i> Online</span>
+        <h4 class="font-size-16 mb-1"><?= !empty($user) ? $user : "" ?></h4>
       </div>
     </div>
 
@@ -181,9 +184,9 @@
         if (isset($menuData) && !empty($menuData)) {
           foreach ($menuData as $key => $value) { ?>
             <li>
-              <a href="<?= $value['menu']['menu_url'] != "#" ? base_url() . $value['menu']['menu_url'] : "javascript: void(0);" ?>" class="has-arrow waves-effect">
-                <i class="<?= $value['menu']['menu_icon']; ?>"></i>
-                <span><?= $value['menu']['menu_name']; ?></span>
+              <a href="<?= $value['parentMenu']['menu_url'] != "#" ? base_url() . $value['parentMenu']['menu_url'] : "javascript: void(0);" ?>" class="has-arrow waves-effect">
+                <i class="<?= $value['parentMenu']['menu_icon']; ?>"></i>
+                <span><?= $value['parentMenu']['menu_name']; ?></span>
               </a>
               <?php if (!empty($value['child_menu'])) { ?>
                 <ul class="sub-menu" aria-expanded="false">

@@ -36,7 +36,7 @@ if (!empty($userData)) {
       </div>
     <?php } ?>
     <div class="p-3">
-      <form class="form-horizontal mt-3" method="post" action="<?= base_url('sign-in') ?>" id="contactForm">
+      <form class="form-horizontal mt-3" method="post" action="<?= base_url('sign-in') ?>">
 
         <div class="form-group mb-3 row">
           <div class="col-12">
