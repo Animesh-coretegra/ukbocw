@@ -19,6 +19,7 @@ $routes->group('', ['filter' => 'MenuDataFilter'], static function ($routes) {
   $routes->get('/menu', 'AdminController::menu');
   $routes->get('/user', 'AdminController::user');
   $routes->get('/profile', 'AdminController::profile');
+  $routes->get('/survey', 'AdminController::survey');
 });
 
 

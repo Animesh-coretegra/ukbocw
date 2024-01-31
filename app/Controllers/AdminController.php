@@ -415,5 +415,8 @@ class AdminController extends BaseController
             $this->menuMappingModel->insertMenuMapping($menuValue);
         }
     }
-
+public function survey(){
+    $menuData = $this->request->menuData;
+    return view('admin/survey',compact('menuData'));
+}
 }
