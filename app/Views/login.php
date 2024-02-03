@@ -16,8 +16,8 @@ if (!empty($userData)) {
     <div class="text-center mt-4">
       <div class="mb-3">
         <a href="index.html" class="auth-logo">
-          <img src="<?= base_url(); ?>assets/backend/assets/images/gujarishLogo.png" height="180" class="logo-dark mx-auto" alt="">
-          <img src="<?= base_url(); ?>assets/backend/assets/images/gujarishLogo.png" height="180" class="logo-light mx-auto" alt="">
+          <img src="<?= base_url(); ?>assets/backend/assets/images/Acumen.png" width="300" height="180" class="logo-dark mx-auto" alt="">
+          <img src="<?= base_url(); ?>assets/backend/assets/images/Acumen.png" width= "300" height="180" class="logo-light mx-auto" alt="">
         </a>
       </div>
     </div>

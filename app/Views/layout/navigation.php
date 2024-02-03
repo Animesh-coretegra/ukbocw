@@ -5,19 +5,19 @@
       <div class="navbar-brand-box">
         <a href="<?= base_url('dashboard') ?>" class="logo logo-dark">
           <span class="logo-sm">
-            <img src="<?= base_url(); ?>assets/backend/assets/images/gujarish-icon.png" alt="logo-sm" height="22">
+            <img src="<?= base_url(); ?>assets/backend/assets/images/Acumen.png" alt="logo-sm" width="150" height="22">
           </span>
           <span class="logo-lg p-5">
-            <img src="<?= base_url(); ?>assets/backend/assets/images/gujarishLogo.png" alt="logo-dark" height="20">
+            <img src="<?= base_url(); ?>assets/backend/assets/images/Acumen.png" alt="logo-dark" width="150" height="20">
           </span>
         </a>
 
         <a href="<?= base_url('dashboard') ?>" class="logo logo-light">
           <span class="logo-sm">
-            <img src="<?= base_url(); ?>assets/backend/assets/images/gujarish-icon.png" alt="logo-sm-light" height="22">
+            <img src="<?= base_url(); ?>assets/backend/assets/images/Acumen.png" alt="logo-sm-light"width="150" height="22">
           </span>
           <span class="logo-lg p-5">
-            <img src="<?= base_url(); ?>assets/backend/assets/images/gujarishLogo.png" alt="logo-light" height="65">
+            <img src="<?= base_url(); ?>assets/backend/assets/images/Acumen.png" alt="logo-light"width="150" height="65">
           </span>
         </a>
       </div>

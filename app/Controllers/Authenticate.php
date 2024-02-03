@@ -18,7 +18,7 @@ class Authenticate extends BaseController
             ];
             $request = $this->request->getPost();
            
-                $client = new Client(['verify' => 'D:\wamp64\bin\php\php8.2.0\extras\ssl\cacert.pem']);
+                $client = new Client(['verify' => 'D:\wamp64\bin\php\php8.2.0\extras\ssl\cacert.pem']);//no need to verify on server side
                 $header = array(
                     'Accept'     => 'application/json',
                     'x-api-key' => getenv('API_KEY'),

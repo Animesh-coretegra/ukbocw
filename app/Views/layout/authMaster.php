@@ -9,7 +9,7 @@
   <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
   <meta content="Themesdesign" name="author" />
   <!-- App favicon -->
-  <link rel="shortcut icon" href="<?= base_url(); ?>assets/backend/assets/images/gujarish-icon.png">
+  <link rel="shortcut icon" href="<?= base_url(); ?>assets/backend/assets/images/favicon.png">
 
   <!-- Bootstrap Css -->
   <link href="<?= base_url(); ?>assets/backend/assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
