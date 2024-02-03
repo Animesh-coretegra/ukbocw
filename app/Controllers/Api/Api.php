@@ -37,7 +37,7 @@ class Api extends BaseController
                         helper(['jwt', 'passwordEncryptDecrypt']);
                         $model = new AuthModel();
                         $password = passwordEncrypt($resArr['password']);
-                        $user = $model->checkUserExist($resArr['username'],$password);
+                        $user = $model->checkUserExist($resArr['username'], $password);
                         if (!empty($user)) {
                             $token = getSignedJWTForUser($resArr['username']);
                             return $this->getSuccessResponse(
@@ -142,6 +142,72 @@ class Api extends BaseController
                     ResponseInterface::HTTP_INTERNAL_SERVER_ERROR,
                 );
             }
+        }
+    }
+
+    public function survey()
+    {
+        if ($this->request->getMethod() == 'post') {
+            if ($this->request->hasHeader('x-api-key') && $this->request->header('x-api-key')->getValue() == getenv('API_KEY')) {
+                if ($this->request->hasHeader('access-token') && !empty($this->request->getHeader('access-token'))) {
+                    $accessToken = $this->request->getHeader('access-token');
+                    $requestValue = $this->request->getBody();
+                    $header = [
+                        'uri' => $this->request->getPath(),
+                    ];
+                    $requestArray = json_decode($requestValue, true);
+                    $surveyData = json_decode(base64_decode($requestArray['survey']), true);
+                    $survey = new AuthModel();
+                    $insertId = $survey->insertSurveyData($surveyData);
+                    if (!empty($insertId)) {
+                        return $this->getSuccessResponse(
+                            [
+                                'status_code' => ResponseInterface::HTTP_OK,
+                                'status' => 'success',
+                                'data' => $insertId
+                            ],
+                            $header,
+                            ResponseInterface::HTTP_OK,
+                        );
+                    }
+                } else {
+                    return  $this->getSuccessResponse(
+                        [
+                            'status_code' => ResponseInterface::HTTP_UNAUTHORIZED,
+                            'status' => 'failed',
+                            'message' => 'Unauthorized User'
+                        ],
+                        [
+                            'uri' => $this->request->getPath(),
+                        ],
+                        ResponseInterface::HTTP_UNAUTHORIZED
+                    );
+                }
+            } else {
+                return  $this->getSuccessResponse(
+                    [
+                        'status_code' => ResponseInterface::HTTP_UNAUTHORIZED,
+                        'status' => 'failed',
+                        'message' => 'Unauthorized Request'
+                    ],
+                    [
+                        'uri' => $this->request->getPath(),
+                    ],
+                    ResponseInterface::HTTP_UNAUTHORIZED
+                );
+            }
+        }else{
+            return  $this->getSuccessResponse(
+                [
+                    'status_code' => ResponseInterface::HTTP_INTERNAL_SERVER_ERROR,
+                    'status' => 'failed',
+                    'message' => 'Internal Server Error'
+                ],
+                [
+                    'uri' => $this->request->getPath(),
+                ],
+                ResponseInterface::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 }

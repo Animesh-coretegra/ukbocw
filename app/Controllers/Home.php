@@ -9,7 +9,7 @@ class Home extends BaseController
         return view('login');
     }
     public function dashboard()
-    {        
+    {   
         $menuData = $this->request->menuData;
         return view('dashboard',compact('menuData'));
     }

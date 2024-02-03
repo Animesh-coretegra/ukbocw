@@ -46,6 +46,7 @@ $routes->get('/user-edit', 'AdminController::userDataEdit');
 //Routes for API
 $routes->post('/api/v1/auth','Api\Api::Login');
 $routes->post('/api/v1/reset-password','Api\Api::resetPassword');
+$routes->post('/api/v1/survey','Api\Api::survey');
 
 $routes->set404Override(static function () {
   echo view('errors/html/error_404.php');
