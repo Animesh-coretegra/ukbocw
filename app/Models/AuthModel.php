@@ -45,4 +45,14 @@ class AuthModel extends Model
 
         return $user;
     }
+
+    public function insertSurveyData($data)
+    {
+       
+        $insertOneResult = $this->database->survey->insertOne($data);
+        if (empty($insertOneResult)) 
+            throw new Exception('Invalid Menu Data');
+
+        return $insertOneResult->getInsertedId();
+    }
 }
