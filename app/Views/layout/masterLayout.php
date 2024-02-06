@@ -4,7 +4,7 @@
 <head>
 
   <meta charset="utf-8" />
-  <title>UKBOCWWB</title>
+  <title>Acumen</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta content="" name="description" />
   <meta content="" name="author" />
@@ -54,7 +54,7 @@
             <div class="col-sm-6">
               <script>
                 document.write(new Date().getFullYear())
-              </script> © UKBOCWWB.
+              </script> © Acumen.
             </div>
             <div class="col-sm-6">
               <div class="text-sm-end d-none d-sm-block">
