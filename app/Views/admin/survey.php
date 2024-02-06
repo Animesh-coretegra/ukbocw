@@ -50,18 +50,18 @@ echo  $this->section('body-content'); ?>
           <tbody>
 
             <?php
-            if (isset($menu) && !empty($menu)) {
+            if (isset($survey) && !empty($survey)) {
               $slNo = 1;
-              foreach ($menu as $key => $value) { ?>
+              foreach ($survey as $key => $value) { ?>
                 <tr>
                   <td><?= $slNo++ ?></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
+                  <td><?= $value['_id']; ?></td>
+                  <td><?= $value['fullName'] ?></td>
+                  <td><?= $value['Gender'] ?></td>
+                  <td><?= $value['district'] ?></td>
+                  <td><?= $value['State'] ?></td>
+                  <td><?= $value['MaritalStatus'] ?></td>
+                  <td><?= $value['mobile_number'] ?></td>
                   <td class="text-right">
                     <div class="dropdown d-inline-block">
                       <a class="dropdown-toggle arrow-none" id="dLabel11" data-bs-toggle="dropdown" href="javascript:void(0)" role="button" aria-haspopup="false" aria-expanded="false">

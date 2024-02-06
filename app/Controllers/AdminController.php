@@ -416,7 +416,12 @@ class AdminController extends BaseController
         }
     }
 public function survey(){
+//     $string=exec('getmac');
+// $mac=substr($string, 0, 17); 
+// echo $mac;
+// die;
+    $survey = iterator_to_array($this->roleModel->getSurvey());
     $menuData = $this->request->menuData;
-    return view('admin/survey',compact('menuData'));
+    return view('admin/survey',compact('menuData','survey'));
 }
 }

@@ -93,4 +93,13 @@ class RoleModel extends Model
 
         return $updateResult->getMatchedCount();
     }
+
+    public function getSurvey()
+    {
+        $survey = $this->database->survey->find();
+        if (!$survey) 
+            throw new Exception('Invalid survey Data');
+
+        return $survey;
+    }
 }
