@@ -8,7 +8,11 @@ echo  $this->section('body-content'); ?>
         <ol class="breadcrumb m-0 p-2">
           <li class="breadcrumb-item"><a href="javascript: void(0);">UKBOCWWB</a></li>
           <li class="breadcrumb-item active"><a href="<?= base_url('menu') ?>">Survey</a></li>
-        </ol>
+        </ol>&nbsp;&nbsp;
+        
+        <button type="button" id="" class="btn btn-info waves-effect waves-light">
+          Excel Export <i class="ri-arrow-right-line align-middle ms-2"></i>
+        </button>
       </div>
     </div>
   </div>
@@ -55,7 +59,7 @@ echo  $this->section('body-content'); ?>
               foreach ($survey as $key => $value) { ?>
                 <tr>
                   <td><?= $slNo++ ?></td>
-                  <td><?= $value['_id']; ?></td>
+                  <td><?= $value['survey_id']; ?></td>
                   <td><?= $value['fullName'] ?></td>
                   <td><?= $value['Gender'] ?></td>
                   <td><?= $value['district'] ?></td>
@@ -68,7 +72,7 @@ echo  $this->section('body-content'); ?>
                         <i class="fas fa-ellipsis-v"></i>
                       </a>
                       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel11">
-                        <a class="dropdown-item" href="#"><i class="fas fa-eye"></i> View</a>
+                        <a class="dropdown-item" href="<?= base_url('survey-details/').urlencode(base64_encode($value['survey_id'])) ?>"><i class="fas fa-eye"></i> View</a>
                       </div>
                     </div>
                   </td>

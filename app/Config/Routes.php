@@ -20,6 +20,7 @@ $routes->group('', ['filter' => 'MenuDataFilter'], static function ($routes) {
   $routes->get('/user', 'AdminController::user');
   $routes->get('/profile', 'AdminController::profile');
   $routes->get('/survey', 'AdminController::survey');
+  $routes->get('/survey-details/(:any)', 'AdminController::surveyDetails/$1');
 });
 
 
@@ -40,6 +41,10 @@ $routes->post('/user', 'AdminController::user');
 $routes->post('/user-edit', 'AdminController::userEdit');
 $routes->get('/user-access-edit', 'AdminController::userAccessEdit');
 $routes->get('/user-edit', 'AdminController::userDataEdit');
+
+
+
+
 
 
 

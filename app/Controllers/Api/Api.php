@@ -157,6 +157,8 @@ class Api extends BaseController
                     ];
                     $requestArray = json_decode($requestValue, true);
                     $surveyData = json_decode(base64_decode($requestArray['survey']), true);
+                    helper('util');
+                    $surveyData['survey_id'] = generateRandom("alnum",16);
                     $survey = new AuthModel();
                     $insertId = $survey->insertSurveyData($surveyData);
                     if (!empty($insertId)) {

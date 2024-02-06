@@ -102,4 +102,21 @@ class RoleModel extends Model
 
         return $survey;
     }
+
+    public function getSurveyById($surveyId)
+    {
+        $survey = $this->database->survey->findOne(array("survey_id" => $surveyId));
+        if (!$survey) 
+            throw new Exception('Invalid survey Data');
+
+        return $survey;
+    }
+    public function checkValidMacAddress($mac)
+    {
+        $mac_address = $this->database->mac_address->findOne(array("mac_address" => $mac,"status"=>"1"));
+        if (!$mac_address) 
+            throw new Exception('Invalid mac_address Data');
+
+        return $mac_address;
+    }
 }
